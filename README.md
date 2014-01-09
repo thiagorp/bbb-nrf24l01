@@ -44,7 +44,7 @@ var nrf = require('bbb-nrf24l01');
 nrf.spiDev = '/dev/spidev1.0'; // This always needs to be the first property to be set
 nrf.channel = 0; //0 - 127 and 0 - 84 in the US
 nrf.payload = 4; //Size in bytes of the payload
-nrf.address = 'serve'; //Must be 5 bytes long
+nrf.address = 'serve'; //Address for receiving messages (Must be 5 bytes long)
 nrf.startReceiving();
 ```
 
@@ -62,6 +62,7 @@ if (nrf.dataReady()) {
 
 Sending data
 ```javascript
+nrf.setToAddr('clien'); //Address of the receiver (also needs to have 5 bytes only)
 var buf = new Buffer('msg'); // The size of the buffer needs to be the same as the payload
 nrf.sendData(buf);
 while (nrf.isSending());
