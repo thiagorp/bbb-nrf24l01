@@ -1,0 +1,19 @@
+{
+  "name": "bbb-nrf24l01",
+  "version": "0.0.1",
+  "description": "nrf24l01 javascript library for beaglebone black, and possibly other embedded systems.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/thiagorp/bbb-nrf24l01.git"
+  },
+  "keywords": [
+    "nrf24l01",
+    "beaglebone"
+  ],
+  "author": "Thiago Rodrigues de Paula",
+  "license": "BSD"
+}
