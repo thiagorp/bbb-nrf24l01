@@ -99,7 +99,7 @@ module.exports = (function(){
 
         if (status & (1 << consts.RX_DR)) return 1;
 
-        return this.rxFifoEmpty();
+        return !this.rxFifoEmpty();
     };
 
     nrf.rxFifoEmpty = function() {
@@ -132,8 +132,13 @@ module.exports = (function(){
 
         while(!dataReady);
         this.csnHigh();
-        this.writeRegister(consts.STATUS, (1<<consts.RX_DR));
-        return data;
+
+        var wBuf = new Buffer(1);
+        wBuf[0] = (1<<consts.RX_DR);
+
+        this.writeRegister(consts.STATUS, wBuf);
+        data = data.slice(1);
+        return data.reverse();
     };
 
     nrf.readRegister = function(reg, val, callback)
