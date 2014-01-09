@@ -119,6 +119,8 @@ module.exports = (function(){
     };
 
     nrf.close = function() {
+        this.ceLow();
+        this.writeRegister(consts.CONFIG, consts.RF_CONFIG);
         spi.close();
     };
 
