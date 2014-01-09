@@ -1,7 +1,7 @@
 {
   "name": "bbb-nrf24l01",
   "version": "0.0.1",
-  "description": "nrf24l01 javascript library for beaglebone black, and possibly other embedded systems.",
+  "description": "nrf24l01 javascript library for bonescript.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -12,7 +12,8 @@
   },
   "keywords": [
     "nrf24l01",
-    "beaglebone"
+    "beaglebone",
+    "bonescript"
   ],
   "author": "Thiago Rodrigues de Paula",
   "license": "BSD",
