@@ -94,6 +94,48 @@ module.exports = (function(){
         return status;
     };
 
+    nrf.dataReady = function() {
+        var status = this.getStatus();
+
+        if (status & (1 << consts.RX_DR)) return 1;
+
+        return this.rxFifoEmpty();
+    };
+
+    nrf.rxFifoEmpty = function() {
+        var fifoStatus;
+        var fifoStatusReady = 0;
+
+        this.readRegister(consts.FIFO_STATUS, new Buffer(1), function(b) {
+            fifoStatus = b[0];
+            fifoStatusReady = 1;
+        });
+
+        while(!fifoStatusReady);
+
+        return (fifoStatus & (1 << consts.RX_EMPTY));
+    };
+
+    nrf.getData = function() {
+        var data;
+        var dataReady = 0;
+
+        this.csnLow();
+
+        var buf = new Buffer(1+payload);
+        buf[0] = consts.R_RX_PAYLOAD;
+
+        spi.transfer(buf, buf, function(device, buf) {
+            data = buf;
+            dataReady = 1;
+        });
+
+        while(!dataReady);
+        this.csnHigh();
+        this.writeRegister(consts.STATUS, (1<<consts.RX_DR));
+        return data;
+    };
+
     nrf.readRegister = function(reg, val, callback)
     {
         this.csnLow();
