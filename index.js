@@ -80,6 +80,20 @@ module.exports = (function(){
         b.digitalWrite(csnPin, b.LOW);
     };
 
+    nrf.getStatus = function() {
+        var status;
+        var statusRdy = 0;
+
+        this.readRegister(consts.STATUS, new Buffer(1), function(b) {
+            status = b[0];
+            statusRdy = 1;
+        });
+
+        while(!statusRdy);
+
+        return status;
+    };
+
     nrf.readRegister = function(reg, val, callback)
     {
         this.csnLow();
