@@ -106,7 +106,9 @@ module.exports = (function(){
         this.powerUpTx();
 
         this.csnLow();
-        spi.write(consts.FLUSH_TX);
+        var flushBuf = new Buffer(1);
+        flushBuf[0] = consts.FLUSH_TX;
+        spi.write(flushBuf);
 
         var sendBuf = new Buffer(val.length+1);
         sendBuf[0] = consts.W_TX_PAYLOAD;
