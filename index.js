@@ -262,7 +262,7 @@ module.exports = (function(){
         inSendMode = true;
         var buf = new Buffer(1);
         buf[0] = consts.RF_CONFIG | ( (1 << consts.PWR_UP) | (0 << consts.PRIM_RX) );
-        this.WRITE_REGISTER(consts.CONFIG, buf);
+        this.writeRegister(consts.CONFIG, buf);
     };
 
     nrf.flushRx = function() {
