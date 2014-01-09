@@ -2,7 +2,7 @@
 
 var b = require('bonescript');
 var consts = require('./const');
-var SPI = require('spi');
+var SPI = require('spi-trp');
 
 module.exports = (function(){
     var csnPin = 'P9_17';
@@ -83,10 +83,14 @@ module.exports = (function(){
     nrf.readRegister = function(reg, val, callback)
     {
         this.csnLow();
-        var buf1 = new Buffer(1);
+        var buf1 = new Buffer(1 + val.length);
         buf1[0] = consts.READ_REGISTER | (consts.REGISTER_MASK & reg);
-        spi.write(buf1);
-        spi.transfer(val, new Buffer(val.length), function(device, buf) {
+
+        for (var i = 0; i < val.length; i++) {
+            buf1[i+1] = val[i];
+        }
+
+        spi.transfer(buf1, new Buffer(buf1.length), function(device, buf) {
             callback(buf);
         });
         this.csnHigh();
@@ -94,10 +98,14 @@ module.exports = (function(){
 
     nrf.writeRegister = function(reg, buffer) {
         this.csnLow();
-        var b = new Buffer(1);
+        var b = new Buffer(1 + buffer.length);
         b[0] = consts.WRITE_REGISTER | (consts.REGISTER_MASK & reg);
+
+        for (var i = 0; i < buffer.length; i++) {
+            b[i+1] = buffer[i];
+        }
+
         spi.write(b);
-        spi.write(buffer);
         this.csnHigh();
     };
 
