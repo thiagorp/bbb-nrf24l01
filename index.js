@@ -11,6 +11,8 @@ module.exports = (function(){
     // var misoPin = 'P9_21';
     var cePin = 'P9_16';
 
+    var inSendMode = false;
+
     var address = 'serv1';
     var payload = 16;
     var channel = 1;
@@ -78,6 +80,56 @@ module.exports = (function(){
 
     nrf.csnLow = function() {
         b.digitalWrite(csnPin, b.LOW);
+    };
+
+    nrf.setToAddr = function(addr) {
+        var buf = new Buffer(addr);
+        this.writeRegister(consts.RX_ADDR_P0, buf);
+        this.writeRegister(consts.TX_ADDR, buf);
+    };
+
+    nrf.send = function(val) {
+
+        // Wait for it to send all the packages
+        while (inSendMode) {
+            var status = this.getStatus();
+
+            if (status & ((1 << consts.TX_DS) | (1 << consts.MAX_RT)))
+            {
+                inSendMode = false;
+                break;
+            }
+        }
+
+        this.ceLow();
+
+        this.powerUpTx();
+
+        var sendBuf = new Buffer(val.length+1);
+        sendBuf[0] = consts.FLUSH_TX;
+
+        for (var i = 0; i < val.length; i++) {
+            sendBuf[i+1] = val[i];
+        }
+
+        this.csnLow();
+        spi.write(sendBuf);
+        this.csnHigh();
+    };
+
+    nrf.isSending = function() {
+        if (inSendMode) {
+
+            var status = this.getStatus();
+            if ( status & ( (1 << consts.TX_DS) | (1 << consts.MAX_RT) ) ) {
+                this.powerUpRx();
+                return false;
+            }
+
+            return true;
+        }
+
+        return false;
     };
 
     nrf.getStatus = function() {
@@ -182,7 +234,7 @@ module.exports = (function(){
     };
 
     nrf.startReceiving = function() {
-        this._powerUpRx();
+        this.powerUpRx();
         this.flushRx();
     };
 
@@ -192,8 +244,8 @@ module.exports = (function(){
         spi.close();
     };
 
-    nrf._powerUpRx = function () {
-        //TODO set is transmitting false
+    nrf.powerUpRx = function () {
+        inSendMode = false;
         this.ceLow();
         var buf1 = new Buffer(1);
         var buf2 = new Buffer(1);
@@ -204,6 +256,13 @@ module.exports = (function(){
         this.writeRegister(consts.CONFIG, buf1);
         this.ceHigh();
         this.writeRegister(consts.STATUS, buf2);
+    };
+
+    nrf.powerUpTx = function() {
+        inSendMode = true;
+        var buf = new Buffer(1);
+        buf[0] = consts.RF_CONFIG | ( (1 << consts.PWR_UP) | (0 << consts.PRIM_RX) );
+        this.WRITE_REGISTER(consts.CONFIG, buf);
     };
 
     nrf.flushRx = function() {

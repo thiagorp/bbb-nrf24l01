@@ -72,6 +72,7 @@ consts.READ_REGISTER = 0x00;
 consts.WRITE_REGISTER = 0x20;
 consts.REGISTER_MASK = 0x1F;
 consts.R_RX_PAYLOAD = 0x61;
+consts.FLUSH_TX = 0xE1;
 consts.FLUSH_RX = 0xE2;
 
 module.exports = consts;
