@@ -138,7 +138,14 @@ module.exports = (function(){
 
         this.writeRegister(consts.STATUS, wBuf);
         data = data.slice(1);
-        return data.reverse();
+        var reversedData = new Buffer(data.length);
+
+        for (var i = 0; i < data.length; i++)
+        {
+            reversedData[i] = data[data.length-1-i];
+        }
+
+        return reversedData;
     };
 
     nrf.readRegister = function(reg, val, callback)
