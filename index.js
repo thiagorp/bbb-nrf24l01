@@ -105,14 +105,16 @@ module.exports = (function(){
 
         this.powerUpTx();
 
+        this.csnLow();
+        spi.write(consts.FLUSH_TX);
+
         var sendBuf = new Buffer(val.length+1);
-        sendBuf[0] = consts.FLUSH_TX;
+        sendBuf[0] = consts.W_TX_PAYLOAD;
 
         for (var i = 0; i < val.length; i++) {
             sendBuf[i+1] = val[i];
         }
 
-        this.csnLow();
         spi.write(sendBuf);
         this.csnHigh();
 
