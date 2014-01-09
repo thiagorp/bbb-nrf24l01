@@ -105,10 +105,12 @@ module.exports = (function(){
 
         this.powerUpTx();
 
-        this.csnLow();
         var flushBuf = new Buffer(1);
         flushBuf[0] = consts.FLUSH_TX;
+
+        this.csnLow();
         spi.write(flushBuf);
+        this.csnHigh();
 
         var sendBuf = new Buffer(val.length+1);
         sendBuf[0] = consts.W_TX_PAYLOAD;
@@ -117,6 +119,7 @@ module.exports = (function(){
             sendBuf[i+1] = val[i];
         }
 
+        this.csnLow();
         spi.write(sendBuf);
         this.csnHigh();
 
