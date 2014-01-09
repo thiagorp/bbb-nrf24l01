@@ -115,6 +115,8 @@ module.exports = (function(){
         this.csnLow();
         spi.write(sendBuf);
         this.csnHigh();
+
+        this.ceHigh();
     };
 
     nrf.isSending = function() {
