@@ -91,7 +91,11 @@ module.exports = (function(){
         }
 
         spi.transfer(buf1, new Buffer(buf1.length), function(device, buf) {
-            callback(buf);
+            var rBuf = new Buffer(buf.length-1);
+            for (var i = 1; i < buf.length; i++) {
+                rBuf[i-1] = buf[i];
+            }
+            callback(rBuf);
         });
         this.csnHigh();
     };
