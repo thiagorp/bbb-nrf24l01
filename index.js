@@ -2,7 +2,7 @@
 
 var b = require('bonescript');
 var consts = require('./const');
-var SPI = require('spi-trp');
+var SPI = require('spi');
 
 module.exports = (function(){
     var csnPin = 'P9_17';
