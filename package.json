@@ -1,6 +1,6 @@
 {
   "name": "bbb-nrf24l01",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "nrf24l01 javascript library for bonescript.",
   "main": "index.js",
   "scripts": {

@@ -32,6 +32,7 @@ module.exports = (function(){
     Object.defineProperty(nrf, 'spiDev', {
         set: function(y) {
             spi = new SPI.Spi(y);
+            spi.maxSpeed(10000000);
             spi.open();
         }
     });
