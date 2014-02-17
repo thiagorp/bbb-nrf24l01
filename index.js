@@ -219,9 +219,9 @@ module.exports = (function(){
             for (var i = 1; i < buf.length; i++) {
                 rBuf[i-1] = buf[i];
             }
+            this.csnHigh();
             callback(rBuf);
         });
-        this.csnHigh();
     };
 
     nrf.writeRegister = function(reg, buffer) {
